@@ -7,12 +7,12 @@ var mongoose=require('mongoose');
 var passport=require('passport');
 var LocalStrategy=require('passport-local');
 var flash=require('connect-flash');
-// mongoose.connect("mongodb://localhost/yelp_camp", { useNewUrlParser: true },function(err,db){
-// 	if(err)
-// 		console.log(err);
-// 	else
-// 		console.log("Connected to DB");
-// });
+mongoose.connect("mongodb+srv://Hsuya1100:itseasy@cluster0-aho80.mongodb.net/test?retryWrites=true", { useNewUrlParser: true },function(err,db){
+	if(err)
+		console.log(err);
+	else
+		console.log("Connected to DB");
+});
 var request=require('request');
 app.use(flash());
 app.use(bodyParser.urlencoded({extended: true}));
