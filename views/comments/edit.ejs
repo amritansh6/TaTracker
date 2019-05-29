@@ -1,0 +1,19 @@
+<%include ../partials/header.ejs%>
+		<div class="container mx-auto  " style="text-align: center; margin-top: 12%;background: #d5dde0;padding-left: 0px;padding-right: 0px;margin-left: 1px;margin-right: 0px">
+			<h1>Edit the Comment</h1>
+		<br>
+		<%	var route1="/campgrounds/"+camp_id %>
+		<%	var route=route1+"/comments/"+comment_data._id+"/edit" %>
+		<%console.log(route)%>
+		<div style="width:30% ;margin:auto;">
+			<form  action="<%route%>" method="POST">
+			<div class="form-group">
+				<input class="form-control" value="<%=comment_data.comment%>" name="comment" type="text">
+			</div>
+			<button class="btn btn-md btn-primary btn-block">Update</button>
+		</form>
+		</div>
+		<br>
+		<a href="<%=route1%>"><button class="btn" style="background: #b4b8ab">back</button></a>
+		</div>
+<%include ../partials/footer.ejs%>
