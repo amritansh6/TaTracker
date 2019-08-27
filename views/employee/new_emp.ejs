@@ -1,14 +1,26 @@
 <%include ../partials/header.ejs%>
 		<div class="container mx-auto  " style="text-align: center; margin-top: 12%;background: #d5dde0;padding-left: 0px;padding-right: 0px;margin-left: 1px;margin-right: 0px">
-			<h1>Add a new Campground </h1>
+			<h1>Add New Employee</h1>
 		<br>
 		<div style="width:30% ;margin:auto;">
-			<form  action="/campgrounds" method="POST">
+			<form  action="/employee" method="POST">
 			<div class="form-group">
 				<input class="form-control" placeholder="name" name="name" type="text">
 			</div>
 			<div class="form-group">
 				<input class="form-control" placeholder="image-url" name="image" type="text">
+			</div>
+			<div class="form-group">
+				<input class="form-control" placeholder="age" name="age" type="text">
+			</div>
+			<div class="form-group">
+				<input class="form-control" placeholder="post" name="post" type="text">
+			</div>
+			<div class="form-group">
+				<input class="form-control" placeholder="salary" name="salary" type="text">
+			</div>
+			<div class="form-group">
+				<input class="form-control" placeholder="location" name="location" type="text">
 			</div>
 			<div class="form-group">
 				<input class="form-control" placeholder="description" name="description" type="text">
@@ -17,6 +29,6 @@
 		</form>
 		</div>
 		<br>
-		<a href="/Campgrounds"><button class="btn " style="background: #b4b8ab">back</button></a>
+		<a href="/employee"><button class="btn " style="background: #b4b8ab">back</button></a>
 		</div>
 <%include ../partials/footer.ejs%>
