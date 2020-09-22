@@ -11,13 +11,7 @@ var config        = require('./config/keys');         // config details file
 // INTEGRATING LIBS
 app.use(flash());
 app.use(bodyParser.urlencoded({extended: true})); 
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(require("express-session")({
-	secret: config.session.secret,
-	resave: false,
-	saveUninitialized: false
-}))	;
+
 //----------------FOR ABLE TO USE PUBLIC DIRECTORY IN FRONTEND-----------             
 app.use(express.static(__dirname + "/public"));  //__dirname is whole directory name  
 
@@ -33,7 +27,13 @@ var  CourseRoutes  = require('./routes/course.js');
 var  indexRoutes   = require('./routes/index.js');
 
 // =================================_AUTH PASSPORT config_=============================
-
+app.use(require("express-session")({
+	secret: config.session.secret,
+	resave: false,
+	saveUninitialized: false
+}))	;
+app.use(passport.initialize());
+app.use(passport.session());
 passport.use('stuLocal',     new LocalStrategy(Student.authenticate()));
 passport.use('professLocal', new LocalStrategy(Professor.authenticate()));
 passport.use('assistLocal',  new LocalStrategy(Assistant.authenticate()));
@@ -47,6 +47,7 @@ passport.serializeUser(function(user, done) {
 
 // rechecks session login of user at every refresh/pageChange
 passport.deserializeUser(function(userDetails, done) {
+	console.log("DEserialiize : "+userDetails.id );
 	if(userDetails.userType === "Professor"){
 		Professor.findById(userDetails.id, function(err, user) {
 			if(err)

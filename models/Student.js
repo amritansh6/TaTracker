@@ -8,20 +8,20 @@ var UserSchema= new mongoose.Schema({
     batch   : String,
 	year    : String,
 	userType: {type:String,default:"Student"},
-	courseDetails :
-	{
+	course :
+	[{
 		courseId : {
 			type : mongoose.Schema.Types.ObjectId,
 			ref  : "Course"
 		   },
-		 courseName:String,
-		 courseCode: String,
-		 professorId : {
+		courseName: String,
+		courseCode: String,
+		professorId : {
 			type : mongoose.Schema.Types.ObjectId,
 			ref  : "Professor"
 		   },
-		   professorName:String
-    }
+		professorName: String
+    }]
 });
 //Gives default functionality required for auth
 UserSchema.plugin(passportLocalMongoose);

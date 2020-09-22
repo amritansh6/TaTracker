@@ -36,6 +36,7 @@ router.post("/register",function(req,res){
 				return res.render("register.ejs");
 			}
 			passport.authenticate('professLocal')(req,res,function(){
+				console.log("entered reg auth");
 				res.redirect("/course");
 			});
 	
@@ -78,13 +79,9 @@ router.get("/login",function(req,res){
 });
 
 //-------------Login POST---------------------------
-router.post("/login",passport.authenticate(['professLocal', 'stuLocal', 'assistLocal'], 
-{ 
-	failureFlash: 'Invalid username or password.',
-	failureRedirect: '/login',
-}),
+router.post("/login",passport.authenticate(['professLocal', 'stuLocal', 'assistLocal']),
 	function(req,res){
-		console.log(req.user._id.toString());
+		console.log("login ID:"+req.user._id.toString());
 		if(req.user._id.toString() && req.user._id.toString().length>0)
 			{
 				req.flash("success","You are successfully logged in");
