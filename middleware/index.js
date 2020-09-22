@@ -1,12 +1,9 @@
-
-//Require Comments Module
-// var Comment=require('../models/comments.js'); 
-
-//Require Campgrounud Schema
-var Employee=require("../models/Employee_Schema.js");
-
-// User Schema
-var User=require('../models/user.js'); 
+// ==============_ Model+MiddleWare _==================
+var Course      = require("../models/Course.js");
+var Professor   = require('../models/Professor.js'); 
+var Student     = require("../models/Student.js");
+var Assistant   = require('../models/Assistant.js'); 
+var middleware  = require("../middleware/index.js");
 
 // middlewares storage
 middlewareObj={};
@@ -24,7 +21,7 @@ middlewareObj.OwnershipAuth=function (req,res,next){
 	if(req.isAuthenticated())
 	{
 		console.log("USER-AUTH DONE")
-		Employee.findById(req.params.id,function(err,emp_data){
+		Course.findById(req.params.id,function(err,emp_data){
 			if(err)
 				res.redirect("back");
 			else if(req.user._id.equals(emp_data.author.id))

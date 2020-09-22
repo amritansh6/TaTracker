@@ -1,82 +1,111 @@
-var express=require('express');
-var app=express();
-// used for req.body 
-var bodyParser=require('body-parser');
-var mongoose=require('mongoose');
-var passport=require('passport');
-var LocalStrategy=require('passport-local');
-var flash=require('connect-flash');
+var express       = require('express');
+var app           = express();
+var bodyParser    = require('body-parser');                 //----------USE FOR REQ.BODY
+var mongoose      = require('mongoose');                   //DB mongodb client for nodejs
+var passport      = require('passport');                  // Auth
+var LocalStrategy = require('passport-local').Strategy;  //auth
+var flash         = require('connect-flash');           // flash error\sucess message directly
+var request       = require('request');                     
+var config        = require('./config/keys');         // config details file
 
-//mongoose.connect("mongodb+srv://Hsuya1100:itseasy@cluster0-aho80.mongodb.net/test?retryWrites=true", { useNewUrlParser: true },function(err,db){
-//	if(err)
-//		console.log(err);
-//	else
-//		console.log("Connected to DB");
-//});
-mongoose.connect("mongodb://localhost/employee_mgmnt", { useNewUrlParser: true },function(err,db){
+// INTEGRATING LIBS
+app.use(flash());
+app.use(bodyParser.urlencoded({extended: true})); 
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(require("express-session")({
+	secret: config.session.secret,
+	resave: false,
+	saveUninitialized: false
+}))	;
+//----------------FOR ABLE TO USE PUBLIC DIRECTORY IN FRONTEND-----------             
+app.use(express.static(__dirname + "/public"));  //__dirname is whole directory name  
+
+//------------------MODELS USED IN PROJECT---------------------------------
+var Course      = require("./models/Course.js");
+var Professor   = require('./models/Professor.js'); 
+var Student     = require("./models/Student.js");
+var Assistant   = require('./models/Assistant.js'); 
+
+
+// =================================_REQUIRE ROUTES_==================================
+var  CourseRoutes  = require('./routes/course.js');
+var  indexRoutes   = require('./routes/index.js');
+
+// =================================_AUTH PASSPORT config_=============================
+
+passport.use('stuLocal',     new LocalStrategy(Student.authenticate()));
+passport.use('professLocal', new LocalStrategy(Professor.authenticate()));
+passport.use('assistLocal',  new LocalStrategy(Assistant.authenticate()));
+
+// add to session
+passport.serializeUser(function(user, done) {
+	console.log("USER SERIALIZE: "+user._id);
+	console.log(user);
+	done(null, {id:user.id, userType:user.userType}); 
+});
+
+// rechecks session login of user at every refresh/pageChange
+passport.deserializeUser(function(userDetails, done) {
+	if(userDetails.userType === "Professor"){
+		Professor.findById(userDetails.id, function(err, user) {
+			if(err)
+				console.log(err);
+			else{
+				console.log("DEserialiize pro: "+userDetails.id );
+				done(err, user);
+			}
+		});
+	}
+	else if(userDetails.userType === "Student"){
+		Student.findById(userDetails.id, function(err, user) {
+			if(err)
+				console.log(err);
+			else{
+				console.log("DEserialiize stu: "+userDetails.id );
+				done(err, user);
+			}
+		});
+	}
+	else{
+		Assistant.findById(userDetails.id, function(err, user) {
+			if(err)
+				console.log(err);
+			else{
+				console.log("DEserialiize assis: "+userDetails.id );
+				done(err, user);
+			}
+		});
+	}
+	
+});
+// =================================_GLOBAL VARIABLES ACCESS_============================
+app.use(async function(req,res,next){
+	res.locals.userDetails=req.user;                    // USER DETAILS
+	res.locals.error=req.flash("error");                // FLASH ERROR MESSAGE
+	res.locals.success=req.flash("success");            // FLASH SUCcESS MESSAGE
+	next();
+});
+
+// ===========================================_Refactored routes use_======================
+app.use(indexRoutes);
+app.use("/course",CourseRoutes);
+
+// ===========================================_DATABASE_===================================
+mongoose.connect(config.mongodb.dbURI, { useNewUrlParser: true },function(err,db){
 	if(err)
 		console.log(err);
 	else
 		console.log("Connected to MongoDB ! ");
 });
 
-var request=require('request');
-app.use(flash());
-app.use(bodyParser.urlencoded({extended: true})); 
-
-// //Require  Schema
-var Employee=require("./models/Employee_Schema.js");
-var User=require('./models/user.js'); 
-
-// // Shortened Routes codes Required
-var  EmployeeRoutes=require('./routes/employee.js');
-var  indexRoutes   =require('./routes/index.js');
-//==========================================
-
-//__dirname is whole directory name  
-app.use(express.static(__dirname + "/public"));
-
-// passport config
-app.use(require("express-session")({
-	secret:"as2312d7as87wq2bje",
-	resave:false,
-	saveUninitialized:false
-}))	;
-app.use(passport.initialize());
-app.use(passport.session());
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
-
-app.use(async function(req,res,next){
-	res.locals.userDetails=req.user;
-	if(req.user){
-		try{
-			let user =await User.findById(req.user._id).populate('notifications',null,{isRead: false}).exec();
-			res.locals.notifications = user.notifications;
-		}catch(err) {
-			console.log(err.message);
-		}
-	}
-	res.locals.error=req.flash("error");
-	res.locals.success=req.flash("success");
-	next();
+// ===========================================_Server Listing_=================================
+app.listen(config.PORT,config.IP,function(){
+	console.log("Server On !!");
 });
 
-//================================================
+// -----------COVER PAGE------------------------
 app.get("/",function(req,res){
 	console.log("ROOT REACHED!");
 	res.render("cover.ejs");
-});
-
-
-//Refactored routes use
-
-app.use(indexRoutes);
-app.use("/employee",EmployeeRoutes);
-
-
-// Server Listing IP and Port
-app.listen(3000,'127.0.0.1',function(){
-	console.log("Server On !!");
 });

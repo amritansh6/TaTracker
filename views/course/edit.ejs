@@ -3,7 +3,7 @@
 <div class="container mx-auto  " style="text-align: center; margin-top: 12%;background: #d5dde0;padding-left: 0px;padding-right: 0px;margin-left: 1px;margin-right: 0px">
 	<h1>Edit Details</h1>
 <br>
-<%	var route1="/employee/"+imp_id %>
+<%	var route1="/course/"+imp_id %>
 <%	var route=route1+"?_method=PUT" %>
 <div style="width:30% ;margin:auto;">
 	<form  action="<%=route %>" method="POST">
@@ -12,21 +12,6 @@
 		</div>
 		<div class="form-group">
 			<input class="form-control" value="<%=imp_data.image %>" name="image" type="text">
-		</div>
-		<div class="form-group">
-			<input class="form-control" value="<%=imp_data.age %>" name="age" type="text">
-		</div>
-		<div class="form-group">
-			<input class="form-control" value="<%=imp_data.post %>" name="post" type="text">
-		</div>
-		<div class="form-group">
-			<input class="form-control" value="<%=imp_data.salary %>" name="salary" type="text">
-		</div>
-		<div class="form-group">
-			<input class="form-control" value="<%=imp_data.location %>" name="location" type="text">
-		</div>
-		<div class="form-group">
-			<input class="form-control" value="<%=imp_data.description %>" name="description" type="text">
 		</div>
 	<button class="btn btn-md btn-primary btn-block">Add it</button>
 </form>
