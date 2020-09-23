@@ -6,7 +6,7 @@
 + mongodb [refer for errorfree install mongodb](https://stackoverflow.com/questions/51417708/unable-to-install-mongodb-properly-on-ubuntu-18-04-lts)
 + [install guide for mongodb](https://hevodata.com/blog/install-mongodb-on-ubuntu/)
 + install [guide](https://dev.mysql.com/doc/mysql-apt-repo-quick-guide/en/) mysql USE METHOD-2 :
-
++ mysql [configuration](https://hackernoon.com/mysql-note-create-admin-user-5e77b43ecc8e) LINUX
 ## launch  (run without proxy in terminal)
 + npm install
 + start mongod
